@@ -11,7 +11,7 @@ let debug = false
 function jsonTreeWalkObject(json, path, callback) {
     for (const key in json) {
         if (typeof json[key] == 'object') {
-            const keyPath = `${path}.${key}`
+            const keyPath = [...path, key]
             const action = callback(json[key], keyPath)
             if (action == 'continue') {
                 jsonTreeWalkObject(json[key], keyPath, callback)
@@ -21,12 +21,22 @@ function jsonTreeWalkObject(json, path, callback) {
     }
 }
 
+function printJsonTsv(path, value) {
+    const pathEncode = path.map(
+        key => encodeURIComponent(key).replace(/\./g, '%2e')
+    ).join('.')
+    for (const line of value.split('\n')) {
+        console.log(`${pathEncode}\t${line}`)
+    }
+}
+
 function logString(json, path) {
     for (const key in json) {
         const string = json[key]
         if (typeof string == 'string') {
-            if (targetRegexp.test(string)) {
-                if (!~excludeString.indexOf(string)) console.log(`${path}.${key}\t${string}`)
+            if (targetRegexp.test(string) && !~excludeString.indexOf(string)) {
+                printJsonTsv([...path, key], string)
+                // console.log(`${path.join('.')}.${key}\t${string}`)
             }
         }
     }
@@ -56,17 +66,26 @@ function jsonAccess(json, path, value) {
     if (arguments.length == 3) target[path[i]] = value
     else return target[path[i]]
 }
-function assignJson(json, path, value) {
-    if (path.length == 1) json[path[0]] = value
+function assignJson(json, path, value, append = false) {
+    if (path.length == 1) {
+        if (append) json[path[0]] += '\n' + value
+        else json[path[0]] = value
+    }
     else assignJson(json[path[0]], path.slice(1), value)
 }
 function patchJson(json, patch) {
-    for (const line of patch.split(/\n/g)) {
+    let pathPrevious
+    for (const line of patch.split('\n')) {
         if (!line) continue
-        const [path, string] = line.split('\t')
+        const [path, ...stringList] = line.split('\t')
         if (debug) console.log(path)
-        pathArray = path.slice(1).split(/\./g)
-        assignJson(json, pathArray, string)
+        const pathArray = path.split('.').map(key => decodeURIComponent(key))
+        assignJson(
+            json, pathArray,
+            stringList.join('\t'),
+            pathPrevious == path // if this path is equal to previous, append
+        )
+        pathPrevious = path
     }
 }
 
@@ -106,7 +125,7 @@ function main(argv) {
     else if (option.list) {
         const file = option._[0]
         const json = readJson(file)
-        jsonTreeWalkObject(json, '', logString)
+        jsonTreeWalkObject(json, [], logString)
     }
     else if (option.patch) {
         const file = option._[0]
