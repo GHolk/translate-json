@@ -1,0 +1,27 @@
+{
+  "name": "translate-json",
+  "version": "1.0.0",
+  "description": "translate json with google translate, for rpg maker",
+  "main": "index.js",
+  "scripts": {
+    "join": "join_json() {\n    echo '{'\n    while [ $# -gt 0 ]\n    do\n        printf '\"%s\":' \"$(echo \"$1\" | sed 's/\\.json$//; s/\\./_/g')\"\n        cat \"$1\"\n        [ $# -gt 1 ] && echo ,\n        shift\n    done\n    echo '}'\n}\njoin_json",
+    "find": "node index.js -l",
+    "find-ja": "node index.js -l -m '[\\u30A0-\\u30FF\\uFF00-\\uFFEF\\u4E00-\\u9FAF]'",
+    "count": "sed 's/^.*\\t//' | sort | uniq -c |sort -n",
+    "patch": "node index.js -p",
+    "split": "node index.js -c",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "translate",
+    "json",
+    "rpgmaker",
+    "game"
+  ],
+  "author": "gholk",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.5"
+  }
+}
