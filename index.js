@@ -141,8 +141,8 @@ function main(argv) {
         const json = readJson(file)
         for (const key in json) {
             const output = JSON.stringify(json[key])
-            console.log(`write to ${key}.json`)
-            fs.writeFileSync(`${key}.json`, output, 'utf8')
+            console.log(`write to ${key}`)
+            fs.writeFileSync(key, output, 'utf8')
         }
     }
     else {
