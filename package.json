@@ -1,6 +1,6 @@
 {
   "name": "translate-json",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "translate json with google translate, for rpg maker",
   "main": "index.js",
   "scripts": {
