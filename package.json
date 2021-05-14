@@ -1,13 +1,15 @@
 {
   "name": "translate-json",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "translate json with google translate, for rpg maker",
   "main": "index.js",
   "bin": {
     "translate-json-core": "./index.js",
     "translate-json": "./run.sh"
   },
+  "man": "translate-json.1",
   "scripts": {
+    "build-man": "sh run.sh build-man",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -20,5 +22,8 @@
   "license": "ISC",
   "dependencies": {
     "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "marked-man": "^0.7.0"
   }
 }

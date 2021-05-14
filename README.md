@@ -1,5 +1,4 @@
-# translate json
-monkey translate subtitle in json, mostly for RPGMaker.
+# translate-json -- monkey translate subtitle in json, mostly for RPGMaker.
 this program grep subtitle from json,
 and you can paste it into google translate or somewhat.
 finally feed the translated result back to the program,
@@ -9,7 +8,7 @@ and enjoy your game.
 
 ## install
 ```sh
-npm install --global https://github.com/GHolk/translate-json/archive/refs/tags/v3.0.0.tar.gz
+npm install --global https://github.com/GHolk/translate-json/archive/refs/tags/v3.0.1.tar.gz
 ```
 
 this package contain two executable,

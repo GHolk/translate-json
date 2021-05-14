@@ -1,0 +1,131 @@
+.TH "TRANSLATE\-JSON" "1" "May 2021" "3.0.1" "npm.js"
+.SH "NAME"
+\fBtranslate-json\fR \- monkey translate subtitle in json, mostly for RPGMaker\.
+.P
+this program grep subtitle from json,
+and you can paste it into google translate or somewhat\.
+finally feed the translated result back to the program,
+and program will generate the new json\.
+replace the old json with the translated new one,
+and enjoy your game\.
+.SH install
+.P
+.RS 2
+.nf
+npm install \-\-global https://github\.com/GHolk/translate\-json/archive/refs/tags/v3\.0\.1\.tar\.gz
+.fi
+.RE
+.P
+this package contain two executable,
+\fBtranslate\-json\fP and \fBtranslate\-json\-core\fP \.
+translate\-json is the front\-end interface of
+translate\-json\-core\.
+.P
+after installing with correct \fBnpm prefix\fP,
+you can run this two command in shell directly,
+or you can execute with npx in a local install:
+\fBnpx translate\-json\fP \.
+.SH merge multiple json into a single large json
+.P
+this is optional, if your game have multiple json\.
+\fIthis script use unix shell\.\fR
+.P
+.RS 2
+.nf
+translate\-json join *\.json > merge\.json
+.fi
+.RE
+.SH find subtitle
+.P
+grep the subtitle from the json\.
+default will find subtitle with non\-ascii\.
+.P
+.RS 2
+.nf
+translate\-json find merge\.json > merge\.tsv
+# same to
+# `translate\-json find \-m '/[^\\u0000\-\\u00A0]/' merge\.json > merge\.tsv`
+.fi
+.RE
+.P
+to find other kind of subtitle, use regexp\.
+.P
+.RS 2
+.nf
+translate\-json find \-m '[\\u30A0\-\\u30FF\\uFF00\-\\uFFEF\\u4E00\-\\u9FAF]' > merge\.json
+# or use defined short cut in npm script:
+# `translate\-json find\-ja merge\.json > merge\.tsv`
+.fi
+.RE
+.SH exclude translation
+.P
+you can exclude translation of some keyword with \fB\-x\fP option,
+note that keyword need fully equal to the json string value,
+but not include\.
+.P
+.RS 2
+.nf
+translate\-json find\-ja \-x Player1 \-x 狂戰士 merge\.json > merge\.tsv
+.fi
+.RE
+.P
+use count script to find repeat string in json,
+this require a unix shell with sed, sort and uniq\.
+.P
+.RS 2
+.nf
+translate\-json count < merge\.tsv > count\.txt
+.fi
+.RE
+.SH copy to online translation
+.P
+get line wise subtitle:
+.P
+.RS 2
+.nf
+sed 's/^\.*\\t//' merge\.tsv > subtitle\.txt
+.fi
+.RE
+.P
+copy the content of file to online translation website
+like translate\.google\.com or whatever you like\.
+and save it to another file if you are not familiar with pipe\.
+.P
+you should make sure that every line in the translated file
+match exactly the same line in the original file\.
+.SH generate new json
+.P
+use following command to generate the new subtitle tsv\.
+.P
+.RS 2
+.nf
+sed 's/\\t\.*$//' merge\.tsv | paste \- subtitle\-translate\.txt > translate\.tsv
+.fi
+.RE
+.P
+finally patch the json with subtitle tsv,
+and generate new json\.
+.P
+.RS 2
+.nf
+translate\-json patch merge\.json < translate\.tsv > translate\.json
+.fi
+.RE
+.SH split merge json
+.P
+if you merge json before, you have to split it\.
+.P
+.RS 2
+.nf
+translate\-json split translate\.json
+.fi
+.RE
+.SH final
+.P
+you can copy the json back to origin directory,
+and replace the old json\.
+for rpg maker, subtitle json should inside \fBwww/data\fP directory\.
+.P
+for low level operation, use \fBtranslate\-json\-core \-\-help\fP
+to see the options\.
+

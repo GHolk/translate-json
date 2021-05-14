@@ -3,6 +3,11 @@ action=$1
 shift
 core=translate-json-core
 case $action in
+    build-man)
+        npx marked-man README.md \
+            --version $(npm ls | sed -r 's/.*@([0-9.]*) .*$/\1/; q') \
+            --section 1 --manual npm.js > translate-json.1
+        ;;
     join)
         echo '{'
         while [ $# -gt 0 ]
