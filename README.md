@@ -86,5 +86,7 @@ npm run split translate.json
 ```
 
 ## final
-you can copy the json back to origin directory.
-for rpg maker, subtitle json should inside k
+you can copy the json back to origin directory,
+and replace the old json.
+for rpg maker, subtitle json should inside `www/data` directory.
+
