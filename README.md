@@ -7,12 +7,27 @@ and program will generate the new json.
 replace the old json with the translated new one,
 and enjoy your game.
 
+## install
+```sh
+npm install --global https://github.com/GHolk/translate-json/archive/refs/tags/v3.0.0.tar.gz
+```
+
+this package contain two executable,
+`translate-json` and `translate-json-core` .
+translate-json is the front-end interface of
+translate-json-core.
+
+after installing with correct `npm prefix`,
+you can run this two command in shell directly,
+or you can execute with npx in a local install:
+`npx translate-json` .
+
 ## merge multiple json into a single large json
 this is optional, if your game have multiple json.
 *this script use unix shell.*
 
 ```sh
-npm run --silent join *.json > merge.json
+translate-json join *.json > merge.json
 ```
 
 ## find subtitle
@@ -20,18 +35,17 @@ grep the subtitle from the json.
 default will find subtitle with non-ascii.
 
 ```sh
-npm run --silent find -- merge.json > merge.tsv
+translate-json find merge.json > merge.tsv
 # same to
-# `npm run --silent find -- -m '/[^\u0000-\u00A0]/' merge.json > merge.tsv`
+# `translate-json find -m '/[^\u0000-\u00A0]/' merge.json > merge.tsv`
 ```
 
 to find other kind of subtitle, use regexp.
 
 ```sh
-npm run --silent find -- -m  '[\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF]' \
-    > merge.json
+translate-json find -m '[\u30A0-\u30FF\uFF00-\uFFEF\u4E00-\u9FAF]' > merge.json
 # or use defined short cut in npm script:
-# `npm run --silent find-ja -- merge.json > merge.tsv`
+# `translate-json find-ja merge.json > merge.tsv`
 ```
 
 ## exclude translation
@@ -40,14 +54,14 @@ note that keyword need fully equal to the json string value,
 but not include.
 
 ```sh
-npm run --silent find-ja -- -x Player1 -x 狂戰士 merge.json > merge.tsv
+translate-json find-ja -x Player1 -x 狂戰士 merge.json > merge.tsv
 ```
 
 use count script to find repeat string in json,
 this require a unix shell with sed, sort and uniq.
 
 ```sh
-npm run count < merge.tsv > count.txt
+translate-json count < merge.tsv > count.txt
 ```
 
 ## copy to online translation
@@ -75,14 +89,14 @@ finally patch the json with subtitle tsv,
 and generate new json.
 
 ```sh
-npm run patch --silent merge.json < translate.tsv > translate.json
+translate-json patch merge.json < translate.tsv > translate.json
 ```
 
 ## split merge json
 if you merge json before, you have to split it.
 
 ```sh
-npm run split translate.json
+translate-json split translate.json
 ```
 
 ## final
@@ -90,3 +104,5 @@ you can copy the json back to origin directory,
 and replace the old json.
 for rpg maker, subtitle json should inside `www/data` directory.
 
+for low level operation, use `translate-json-core --help`
+to see the options.
